@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<title>entertainment blog</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- SEO -->
+<meta name="description" content="entertainment blog – movies, music, celebrity news, trending stories.">
+<meta name="author" content="entertainment blog">
+<meta property="og:title" content="entertainment blog">
+<meta property="og:description" content="Your #1 source for entertainment news, music and movies.">
+<meta property="og:type" content="website">
+
+<!-- ICONS -->
+<link rel="icon" href="https://i.imgur.com/Y0I5g7P.png">
+
+<style>
+
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:Arial, sans-serif;
+  background:#0d0d0d;
+  color:white;
+  transition:0.3s;
+}
+
+/* HEADER */
+header{
+  background:#000;
+  padding:20px;
+  position:sticky;
+  top:0;
+  z-index:2000;
+  box-shadow:0 0 20px rgba(255,0,102,0.5);
+}
+#logo{
+  font-size:32px;
+  font-weight:bold;
+  background:linear-gradient(45deg,#ff0033,#ff00cc);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* MENU */
+#menu-btn{
+  display:none;
+  font-size:34px;
+  float:right;
+  cursor:pointer;
+  color:#ff00cc;
+}
+nav{
+  margin-top:10px;
+}
+nav a{
+  color:white;
+  margin-right:20px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* DROPDOWN */
+.dropdown{
+  position:relative;
+  display:inline-block;
+}
+.dropdown-content{
+  display:none;
+  position:absolute;
+  background:#1a1a1a;
+  padding:10px;
+  border-radius:5px;
+  box-shadow:0 0 15px rgba(255,0,204,0.5);
+}
+.dropdown:hover .dropdown-content{
+  display:block;
+}
+.dropdown-content a{
+  display:block;
+  padding:10px;
+  color:white;
+}
+
+@media(max-width:900px){
+  #menu-btn{display:block;}
+  nav{display:none;flex-direction:column;}
+  nav a{margin:10px 0;}
+}
+
+/* SEARCH */
+#search{
+  padding:10px;
+  width:250px;
+  border-radius:5px;
+  border:none;
+  margin-top:10px;
+}
+
+/* HERO */
+.hero{
+  background:linear-gradient(45deg,#ff0033,#ff00cc);
+  padding:70px;
+  text-align:center;
+  color:white;
+  box-shadow:0 0 30px rgba(255,0,102,0.6);
+}
+
+/* SLIDER */
+section{padding:30px;}
+.slider{
+  display:flex;
+  overflow-x:auto;
+  gap:20px;
+}
+.slide{
+  min-width:280px;
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 0 20px rgba(255,0,204,0.3);
+}
+
+/* CARDS */
+.card{
+  background:#111;
+  padding:15px;
+  margin:15px 0;
+  border-radius:10px;
+  box-shadow:0 0 15px rgba(255,0,204,0.15);
+}
+.card img{
+  width:100%;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+/* LIKE */
+.like-btn{
+  padding:7px 10px;
+  background:#ff00aa;
+  border-radius:5px;
+  cursor:pointer;
+  display:inline-block;
+}
+
+/* COMMENTS */
+.comment-box{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:5px;
+}
+
+/* NEWSLETTER */
+#newsletter{
+  background:#111;
+  text-align:center;
+  padding:30px;
+  box-shadow:0 0 20px rgba(255,0,204,0.3);
+}
+#newsletter input{
+  padding:10px;
+  width:260px;
+  border:none;
+  border-radius:5px;
+}
+#newsletter button{
+  padding:10px 15px;
+  background:#ff00cc;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+  color:white;
+}
+
+/* ADMIN */
+#admin{
+  background:#0c0c0c;
+  padding:30px;
+  box-shadow:0 0 20px rgba(255,0,204,0.2);
+}
+#admin input,#admin textarea,#admin select{
+  width:100%;
+  padding:10px;
+  border:none;
+  margin:10px 0;
+  border-radius:5px;
+}
+#admin button{
+  padding:14px;
+  background:#ff0033;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+  color:white;
+  font-weight:bold;
+}
+
+/* SOCIALS */
+.social{
+  margin:20px 0;
+}
+.social a{
+  font-size:28px;
+  margin-right:20px;
+  color:#ff00cc;
+  text-decoration:none;
+}
+
+/* FOOTER */
+.footer{
+  background:#000;
+  padding:20px;
+  text-align:center;
+  margin-top:40px;
+}
+
+</style>
+
+
+<script>
+
+/* MOBILE MENU */
+function toggleMenu(){
+  let n=document.getElementById("nav");
+  n.style.display = n.style.display==="block"?"none":"block";
+}
+
+/* SEARCH */
+function searchCards(){
+  let val=document.getElementById("search").value.toLowerCase();
+  let cards=document.getElementsByClassName("card");
+  for(let c of cards){
+    c.style.display=c.innerText.toLowerCase().includes(val)?"block":"none";
+  }
+}
+
+/* POSTS SYSTEM */
+let posts = JSON.parse(localStorage.getItem("posts")) || [];
+
+function displayPosts(){
+  let area=document.getElementById("dynamic-posts");
+  area.innerHTML="";
+
+  posts.forEach((p,i)=>{
+    area.innerHTML += `
+      <div class="card">
+        <img src="${p.image}">
+        <h3>${p.title}</h3>
+        <p>${p.category}</p>
+        <p>${p.content}</p>
+
+        <div class="like-btn" onclick="likePost(${i})">
+          ❤️ Like (${p.likes})
+        </div>
+
+        <textarea class="comment-box" placeholder="Write a comment..." 
+        onkeydown="saveComment(event,${i},this)"></textarea>
+
+        <div><b>Comments:</b><br>${p.comments.join("<br>")}</div>
+      </div>
+    `;
+  });
+}
+
+function likePost(i){
+  posts[i].likes++;
+  localStorage.setItem("posts",JSON.stringify(posts));
+  displayPosts();
+}
+
+function saveComment(e,i,input){
+  if(e.key==="Enter"){
+    posts[i].comments.push(input.value);
+    input.value="";
+    localStorage.setItem("posts",JSON.stringify(posts));
+    displayPosts();
+  }
+}
+
+function addPost(){
+  let title=document.getElementById("p-title").value;
+  let category=document.getElementById("p-category").value;
+  let img=document.getElementById("p-img").value;
+  let content=document.getElementById("p-content").value;
+
+  posts.push({
+    title:title,
+    category:category,
+    image:img,
+    content:content,
+    likes:0,
+    comments:[]
+  });
+
+  localStorage.setItem("posts",JSON.stringify(posts));
+  alert("Post Added!");
+  displayPosts();
+}
+
+window.onload = displayPosts;
+
+</script>
+
+</head>
+<body>
+
+<header>
+  <span id="logo">entertainment blog</span>
+  <span id="menu-btn" onclick="toggleMenu()">☰</span>
+
+  <nav id="nav">
+    <a href="#home">Home</a>
+
+    <div class="dropdown">
+      <a href="#movies">Movies ▼</a>
+      <div class="dropdown-content">
+        <a href="#movies">Reviews</a>
+        <a href="#movies">Trailers</a>
+        <a href="#movies">Upcoming</a>
+      </div>
+    </div>
+
+    <a href="#music">Music</a>
+    <a href="#celebrity">Celebrity</a>
+    <a href="#blog">Blog</a>
+    <a href="#videos">Videos</a>
+    <a href="#admin">Admin</a>
+  </nav>
+
+  <input id="search" onkeyup="searchCards()" placeholder="Search posts...">
+</header>
+
+<div class="hero" id="home">
+  <h2>🔥 entertainment blog</h2>
+  <p>Your home for trending entertainment news.</p>
+</div>
+
+<section>
+  <h2>🔥 Trending Now</h2>
+  <div class="slider">
+    <div class="slide">New Marvel Movie Breaks Records!</div>
+    <div class="slide">Viral TikTok Dance Wins Award</div>
+    <div class="slide">Top 10 Songs Of The Month</div>
+  </div>
+</section>
+
+<section id="dynamic-posts"></section>
+
+<section id="newsletter">
+  <h2>📩 Join Our Newsletter</h2>
+  <input placeholder="Your email">
+  <button>Subscribe</button>
+</section>
+
+<section id="admin">
+  <h2>🛠 Admin Panel</h2>
+
+  <p>Post Title</p>
+  <input id="p-title">
+
+  <p>Category</p>
+  <select id="p-category">
+    <option>Movies</option>
+    <option>Music</option>
+    <option>Celebrity</option>
+    <option>Lifestyle</option>
+    <option>Blog</option>
+  </select>
+
+  <p>Image URL</p>
+  <input id="p-img">
+
+  <p>Content</p>
+  <textarea id="p-content" rows="5"></textarea>
+
+  <button onclick="addPost()">Add Post</button>
+</section>
+
+<div class="footer">
+  © 2026 entertainment blog
+</div>
+
+</body>
+</html>
